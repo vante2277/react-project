@@ -1,10 +1,11 @@
-// 의존성 없는 정적 서버: 빌드 결과(dist) 제공 (게시판·To do 데이터는 Supabase 에 저장)
+// 의존성 없는 서버: 빌드 결과(dist) + /api/indices 제공 (게시판·To do 데이터는 Supabase 에 저장)
 // 개발: npm run dev (5173)
 // 배포: npm start → http://localhost:3001
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import indicesHandler from '../api/indices.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(__dirname, '..', 'dist');
@@ -30,6 +31,8 @@ function sendFile(res, file) {
 
 http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
+
+  if (url.pathname === '/api/indices') return indicesHandler(req, res);
 
   const file = path.join(DIST, decodeURIComponent(url.pathname));
   if (file !== DIST && !file.startsWith(DIST + path.sep)) {

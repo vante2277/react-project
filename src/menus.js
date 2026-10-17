@@ -1,6 +1,7 @@
 import Bbs from './pages/Bbs.jsx';
 import Todo from './pages/Todo.jsx';
 import Calculator from './pages/Calculator.jsx';
+import Stocks from './pages/Stocks.jsx';
 
 // 메뉴를 추가하려면 페이지 컴포넌트를 만들고 이 배열에 항목만 추가하면 됩니다.
 // 메인화면 카드와 라우트가 모두 이 배열로 만들어집니다.
@@ -28,5 +29,13 @@ export const MENUS = [
     icon: '🧮',
     color: 'linear-gradient(135deg, #43e97b, #38f9d7)',
     Component: Calculator,
+  },
+  {
+    path: '/stocks',
+    title: '주식지수',
+    desc: '한국·미국·중국·대만·일본 지수를 한눈에 봐요.',
+    icon: '📈',
+    color: 'linear-gradient(135deg, #f6d365, #fda085)',
+    Component: Stocks,
   },
 ];

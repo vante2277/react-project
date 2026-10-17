@@ -19,6 +19,7 @@ body {
 .app {
   width: 440px;
   max-width: 100%;
+  min-width: 0;
   padding: 26px;
   border-radius: 28px;
   background: rgba(20, 20, 35, 0.75);

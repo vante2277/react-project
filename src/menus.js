@@ -2,6 +2,7 @@ import Bbs from './pages/Bbs.jsx';
 import Todo from './pages/Todo.jsx';
 import Calculator from './pages/Calculator.jsx';
 import Stocks from './pages/Stocks.jsx';
+import Weather from './pages/Weather.jsx';
 
 // 메뉴를 추가하려면 페이지 컴포넌트를 만들고 이 배열에 항목만 추가하면 됩니다.
 // 메인화면 카드와 라우트가 모두 이 배열로 만들어집니다.
@@ -37,5 +38,13 @@ export const MENUS = [
     icon: '📈',
     color: 'linear-gradient(135deg, #f6d365, #fda085)',
     Component: Stocks,
+  },
+  {
+    path: '/weather',
+    title: '전국날씨',
+    desc: '전국 지도에서 오늘과 일주일 날씨를 확인해요.',
+    icon: '🌤️',
+    color: 'linear-gradient(135deg, #4facfe, #00f2fe)',
+    Component: Weather,
   },
 ];

@@ -38,7 +38,7 @@ export default function Home() {
       )}
 
       <header className="hero">
-        <h1>Daily Hub</h1>
+        <h1>현성's Daily Hub</h1>
         <p>매일 쓰는 작은 도구들을 한 곳에서</p>
         <div className="clock">{now}</div>
       </header>
@@ -66,7 +66,7 @@ export default function Home() {
         </ul>
       </nav>
 
-      <footer>© Daily Hub</footer>
+      <footer>© 현성's Daily Hub</footer>
     </div>
   );
 }

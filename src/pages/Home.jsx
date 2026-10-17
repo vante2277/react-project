@@ -45,15 +45,24 @@ export default function Home() {
 
       <nav aria-label="메인 메뉴">
         <ul className="menu">
-          {MENUS.map(m => (
-            <li key={m.path}>
-              <Link className="card" to={m.path}>
+          {MENUS.map(m => {
+            const body = (
+              <>
                 <span className="icon" style={{ background: m.color }}>{m.icon}</span>
-                <h2>{m.title}</h2>
+                <h2>{m.title}{m.href && <span className="external" aria-label="새 탭에서 열림"> ↗</span>}</h2>
                 <p>{m.desc}</p>
-              </Link>
-            </li>
-          ))}
+              </>
+            );
+            return (
+              <li key={m.path || m.href}>
+                {m.href ? (
+                  <a className="card" href={m.href} target="_blank" rel="noopener noreferrer">{body}</a>
+                ) : (
+                  <Link className="card" to={m.path}>{body}</Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </nav>
 

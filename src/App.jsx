@@ -10,7 +10,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
-      {MENUS.map(({ path, Component }) => (
+      {MENUS.filter(m => m.Component).map(({ path, Component }) => (
         <Route key={path} path={path} element={<Component />} />
       ))}
       <Route path="*" element={<Navigate to="/" replace />} />

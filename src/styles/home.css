@@ -50,6 +50,7 @@
 }
 .home .card h2 { font-size: 1.2rem; font-weight: 600; }
 .home .card p { font-size: 0.88rem; line-height: 1.5; color: rgba(255, 255, 255, 0.65); }
+.home .card .external { font-size: 0.9rem; color: rgba(255, 255, 255, 0.55); }
 
 .home .account {
   align-self: flex-end;

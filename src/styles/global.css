@@ -1,0 +1,44 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-attachment: fixed;
+  color: #fff;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+/* 게시판·To do 공통 카드 */
+.app {
+  width: 440px;
+  max-width: 100%;
+  padding: 26px;
+  border-radius: 28px;
+  background: rgba(20, 20, 35, 0.75);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.app header { margin-bottom: 20px; }
+.app h1 { font-size: 1.8rem; font-weight: 600; margin-top: 6px; }
+.app .storage { margin-top: 4px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.45); }
+
+.bbs .notice,
+.todo .notice { margin-bottom: 16px; padding: 12px 14px; border-radius: 14px; font-size: 0.88rem; line-height: 1.6; color: rgba(255, 255, 255, 0.75); background: rgba(255, 255, 255, 0.08); }
+.bbs .notice a,
+.todo .notice a { color: #38f9d7; text-decoration: none; }
+.bbs .notice.error,
+.todo .notice.error { color: #ffd0d8; background: rgba(255, 106, 136, 0.18); }
+.app button:disabled { opacity: 0.6; cursor: default; }
+
+.back { color: rgba(255, 255, 255, 0.6); text-decoration: none; font-size: 0.9rem; }
+.back:hover { color: #fff; }
+
+.app .list { list-style: none; max-height: 340px; overflow-y: auto; }
+.app .empty { text-align: center; padding: 24px 0; color: rgba(255, 255, 255, 0.4); }

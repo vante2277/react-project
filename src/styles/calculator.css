@@ -1,0 +1,81 @@
+.calculator {
+  width: 340px;
+  max-width: 100%;
+  padding: 22px;
+  border-radius: 28px;
+  background: rgba(20, 20, 35, 0.75);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.calculator .back { display: inline-block; margin-left: 4px; }
+
+.calculator .display {
+  min-height: 110px;
+  padding: 12px 8px 18px;
+  text-align: right;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+.calculator .expression {
+  min-height: 24px;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.5);
+  word-break: break-all;
+}
+.calculator .result {
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 1.2;
+  word-break: break-all;
+}
+
+.calculator .keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.calculator .key {
+  height: 66px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.5rem;
+  font-family: inherit;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s, filter 0.2s;
+}
+.calculator .key:hover { background: rgba(255, 255, 255, 0.22); }
+.calculator .key:active { transform: scale(0.94); }
+.calculator .key.func { background: rgba(255, 255, 255, 0.28); }
+.calculator .key.func:hover { background: rgba(255, 255, 255, 0.38); }
+.calculator .key.op { background: linear-gradient(135deg, #ff9a56, #ff6a88); }
+.calculator .key.equal { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #123; font-weight: 600; }
+.calculator .key.op:hover,
+.calculator .key.equal:hover { filter: brightness(1.12); }
+.calculator .key.op.active { outline: 3px solid #fff; }
+.calculator .key.zero { grid-column: span 2; }
+
+.calculator .links { display: flex; gap: 10px; margin-top: 16px; }
+.calculator .todo-link,
+.calculator .board-link {
+  flex: 1;
+  display: block;
+  padding: 14px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
+  color: #fff;
+  transition: transform 0.1s, filter 0.2s;
+}
+.calculator .todo-link { background: linear-gradient(135deg, #667eea, #764ba2); }
+.calculator .board-link { background: linear-gradient(135deg, #ff9a56, #ff6a88); }
+.calculator .todo-link:hover,
+.calculator .board-link:hover { filter: brightness(1.15); }
+.calculator .todo-link:active,
+.calculator .board-link:active { transform: scale(0.97); }

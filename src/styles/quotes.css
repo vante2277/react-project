@@ -1,0 +1,100 @@
+.app.quotes { width: 720px; }
+
+.quotes .ko { font-size: 1rem; line-height: 1.6; font-weight: 600; word-break: keep-all; }
+.quotes .en { margin-top: 4px; font-size: 0.82rem; line-height: 1.5; font-style: italic; color: rgba(255, 255, 255, 0.55); }
+
+.quotes .quote-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.quotes .source { font-size: 0.72rem; color: rgba(255, 255, 255, 0.4); }
+.quotes .copy {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+.quotes .copy:hover { color: #fff; background: rgba(255, 255, 255, 0.2); }
+
+/* 오늘의 명언 */
+.quotes .today {
+  padding: 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(250, 112, 154, 0.25), rgba(254, 225, 64, 0.18));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+.quotes .today-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.quotes .badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #123;
+  background: linear-gradient(135deg, #fa709a, #fee140);
+}
+.quotes .shuffle {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+}
+.quotes .shuffle:hover { color: #fff; }
+.quotes .today .ko { font-size: 1.2rem; }
+.quotes .today .en { font-size: 0.88rem; }
+.quotes .who { font-size: 0.85rem; font-weight: 600; }
+.quotes .who span { font-weight: 400; color: rgba(255, 255, 255, 0.55); }
+
+/* 검색·인물 선택 */
+.quotes .tools { margin: 20px 0 6px; }
+.quotes .tools input {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+.quotes .tools input::placeholder { color: rgba(255, 255, 255, 0.45); }
+.quotes .tools input:focus { background: rgba(255, 255, 255, 0.2); }
+.quotes .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.quotes .chip {
+  padding: 5px 11px;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.78rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+.quotes .chip:hover { background: rgba(255, 255, 255, 0.2); }
+.quotes .chip.active { color: #123; font-weight: 600; background: linear-gradient(135deg, #fa709a, #fee140); }
+
+/* 인물 카드 */
+.quotes .investor { margin-top: 14px; padding: 18px; border-radius: 20px; background: rgba(255, 255, 255, 0.06); }
+.quotes .investor-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 0; }
+.quotes .investor h2 { font-size: 1.1rem; font-weight: 700; }
+.quotes .en-name { font-size: 0.8rem; font-weight: 400; color: rgba(255, 255, 255, 0.5); }
+.quotes .facts { margin-top: 2px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); }
+.quotes .style {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: #fee140;
+  background: rgba(254, 225, 64, 0.12);
+}
+.quotes .bio { margin-top: 8px; font-size: 0.85rem; line-height: 1.6; color: rgba(255, 255, 255, 0.7); word-break: keep-all; }
+
+.quotes .quote-list { list-style: none; margin-top: 12px; }
+.quotes .quote { padding: 12px 14px; margin-top: 8px; border-left: 3px solid #fa709a; border-radius: 4px 14px 14px 4px; background: rgba(255, 255, 255, 0.05); }
+
+.quotes .empty { text-align: center; padding: 30px 0; color: rgba(255, 255, 255, 0.45); }
+.quotes .note { margin-top: 18px; font-size: 0.72rem; line-height: 1.6; color: rgba(255, 255, 255, 0.4); }

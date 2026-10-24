@@ -21,36 +21,43 @@ export default function Home() {
 
   return (
     <div className="home">
-      {!loading && (
-        <div className="account">
-          {user ? (
-            <>
-              <span>{displayName(user)} 님</span>
-              <button onClick={() => supabase.auth.signOut()}>로그아웃</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login">로그인</Link>
-              <Link className="primary" to="/signup">회원가입</Link>
-            </>
-          )}
-        </div>
-      )}
+      <div className="topbar">
+        <span className="clock">{now}</span>
+        {!loading && (
+          <div className="account">
+            {user ? (
+              <>
+                <span>{displayName(user)} 님</span>
+                <button onClick={() => supabase.auth.signOut()}>로그아웃</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">로그인</Link>
+                <Link className="primary" to="/signup">회원가입</Link>
+              </>
+            )}
+          </div>
+        )}
+      </div>
 
       <header className="hero">
+        <p className="kicker">Daily Tools · Est. 2026</p>
         <h1>현성's Daily Hub</h1>
-        <p>매일 쓰는 작은 도구들을 한 곳에서</p>
-        <div className="clock">{now}</div>
+        <p className="tagline">매일 쓰는 작은 도구들을 한 곳에서</p>
       </header>
 
       <nav aria-label="메인 메뉴">
         <ul className="menu">
-          {MENUS.map(m => {
+          {MENUS.map((m, i) => {
             const body = (
               <>
-                <span className="icon" style={{ background: m.color }}>{m.icon}</span>
-                <h2>{m.title}{m.href && <span className="external" aria-label="새 탭에서 열림"> ↗</span>}</h2>
+                <span className="card-top">
+                  <span className="num">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="icon" aria-hidden="true">{m.icon}</span>
+                </span>
+                <h2>{m.title}</h2>
                 <p>{m.desc}</p>
+                <span className="go" aria-label={m.href ? '새 탭에서 열림' : undefined}>{m.href ? '↗' : '→'}</span>
               </>
             );
             return (

@@ -1,68 +1,79 @@
-.app.stocks { width: 820px; }
+.app.stocks { width: 860px; }
 
 .stocks .title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.stocks .refresh {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 12px;
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #123;
-  background: linear-gradient(135deg, #f6d365, #fda085);
-  cursor: pointer;
-}
-.stocks .refresh:hover { filter: brightness(1.1); }
+.stocks .refresh { padding: 8px 16px; font-size: 0.82rem; }
 
-.stocks .country { margin-top: 18px; }
-.stocks .country h2 { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: rgba(255, 255, 255, 0.7); }
+.stocks .country { margin-top: 22px; }
+.stocks .country h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.stocks .country h2::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 
 .stocks .cards {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 10px;
 }
 
 /* 한국식 표기: 상승 빨강, 하락 파랑 */
 .stocks .card {
-  --c: rgba(255, 255, 255, 0.7);
+  --c: var(--ink-2);
   padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  transition: border-color 0.15s;
 }
-.stocks .card.up { --c: #ff6b7d; }
-.stocks .card.down { --c: #5ea8ff; }
+.stocks .card:hover { border-color: var(--ink-3); }
+.stocks .card.up { --c: var(--up); }
+.stocks .card.down { --c: var(--down); }
 
-.stocks .card .top { display: flex; align-items: center; justify-content: space-between; }
-.stocks .card .name { font-weight: 600; }
+.stocks .card .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.stocks .card .name { font-weight: 700; }
 .stocks .card .state {
   padding: 2px 8px;
   border-radius: 999px;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.1);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-3);
+  background: var(--surface-2);
 }
-.stocks .card .state.open { color: #123; font-weight: 600; background: #43e97b; }
+.stocks .card .state.open { color: var(--ok); font-weight: 500; background: var(--ok-soft); }
 
-.stocks .card .price { margin-top: 6px; font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.stocks .card .change { font-size: 0.9rem; font-weight: 600; color: var(--c); font-variant-numeric: tabular-nums; }
+.stocks .card .price {
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.stocks .card .change { font-size: 0.88rem; font-weight: 600; color: var(--c); font-variant-numeric: tabular-nums; }
 
 .stocks .spark { display: block; width: 100%; height: 40px; margin: 8px 0 6px; }
-.stocks .spark polyline { fill: none; stroke: var(--c); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.stocks .spark .base { stroke: rgba(255, 255, 255, 0.25); stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.stocks .spark polyline { fill: none; stroke: var(--c); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.stocks .spark .base { stroke: var(--line); stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
 
 .stocks .card .meta {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
-.stocks .card .fail { margin-top: 8px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.45); }
+.stocks .card .fail { margin-top: 8px; font-size: 0.85rem; color: var(--ink-3); }
 
-.stocks .card.skeleton { height: 150px; animation: pulse 1.2s ease-in-out infinite; }
-@keyframes pulse { 50% { opacity: 0.5; } }
+.stocks .card.skeleton { height: 150px; background: var(--surface-2); animation: pulse 1.2s ease-in-out infinite; }
 
-.stocks .notice { margin-bottom: 0; margin-top: 12px; }
+.stocks .notice { margin-bottom: 0; margin-top: 14px; }

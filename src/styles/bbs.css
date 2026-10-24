@@ -1,87 +1,65 @@
-.bbs .write { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.app.bbs { width: 560px; }
+
+.bbs .write { display: flex; flex-direction: column; gap: 10px; margin-bottom: 26px; }
 .bbs .write input,
-.bbs .write textarea {
-  padding: 14px 16px;
-  border: none;
-  border-radius: 16px;
-  font-size: 1rem;
-  font-family: inherit;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-  outline: none;
-  resize: vertical;
-}
-.bbs .write textarea { min-height: 90px; }
-.bbs .write input::placeholder,
-.bbs .write textarea::placeholder { color: rgba(255, 255, 255, 0.45); }
-.bbs .write input:focus,
-.bbs .write textarea:focus { background: rgba(255, 255, 255, 0.2); }
-.bbs .write button {
-  align-self: flex-end;
-  padding: 12px 26px;
-  border: none;
-  border-radius: 16px;
-  font-size: 1rem;
-  font-family: inherit;
-  color: #123;
-  font-weight: 600;
-  background: linear-gradient(135deg, #ff9a56, #ff6a88);
-  cursor: pointer;
-}
-.bbs .write button:hover { filter: brightness(1.1); }
+.bbs .write textarea { padding: 13px 14px; font-size: 1rem; resize: vertical; }
+.bbs .write input { font-weight: 600; }
+.bbs .write textarea { min-height: 96px; line-height: 1.6; }
+.bbs .write button { align-self: flex-end; padding: 11px 24px; font-size: 0.95rem; }
 
-.bbs .board h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; color: rgba(255, 255, 255, 0.85); }
-
-.bbs .item {
-  padding: 14px 16px;
-  margin-bottom: 8px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.1);
+.bbs .board h2 {
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
-.bbs .item .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.bbs .item .title { font-weight: 600; word-break: break-all; }
-.bbs .item .date { flex-shrink: 0; font-size: 0.75rem; color: rgba(255, 255, 255, 0.45); }
-.bbs .item .author { margin-top: 2px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); }
-.bbs .item .content { margin-top: 8px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.75); white-space: pre-wrap; word-break: break-all; }
 
-.bbs .item .actions { margin-top: 8px; display: flex; gap: 12px; }
+.bbs .item { padding: 16px 2px; border-bottom: 1px solid var(--line); }
+.bbs .item:last-child { border-bottom: none; }
+.bbs .item .row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.bbs .item .title { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; word-break: break-all; }
+.bbs .item .date { flex-shrink: 0; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
+.bbs .item .author { margin-top: 2px; font-size: 0.75rem; color: var(--ink-3); }
+.bbs .item .content { margin-top: 8px; font-size: 0.92rem; line-height: 1.65; color: var(--ink-2); white-space: pre-wrap; word-break: break-all; }
+
+.bbs .item .actions { margin-top: 10px; display: flex; gap: 14px; }
 .bbs .item .edit-btn,
 .bbs .item .del {
   border: none;
   background: none;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
   cursor: pointer;
 }
-.bbs .item .edit-btn:hover { color: #38f9d7; }
-.bbs .item .del:hover { color: #ff6a88; }
+.bbs .item .edit-btn:hover { color: var(--ink); text-decoration: underline; }
+.bbs .item .del:hover { color: var(--danger); text-decoration: underline; }
 
-.bbs .item.editing { background: rgba(255, 255, 255, 0.16); }
+.bbs .item.editing { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
 .bbs .item .edit-title,
 .bbs .item .edit-content {
   display: block;
   width: 100%;
   padding: 10px 12px;
-  border: none;
-  border-radius: 12px;
-  font: inherit;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
-  outline: none;
   resize: vertical;
 }
 .bbs .item .edit-title { font-weight: 600; margin-bottom: 8px; }
-.bbs .item .edit-content { min-height: 70px; }
+.bbs .item .edit-content { min-height: 76px; line-height: 1.6; }
 .bbs .item .save-btn,
 .bbs .item .cancel-btn {
-  border: none;
-  border-radius: 10px;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
   padding: 6px 14px;
   font: inherit;
   font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
-.bbs .item .save-btn { color: #123; font-weight: 600; background: linear-gradient(135deg, #43e97b, #38f9d7); }
-.bbs .item .cancel-btn { color: #fff; background: rgba(255, 255, 255, 0.15); }
-.bbs .item .save-btn:hover,
-.bbs .item .cancel-btn:hover { filter: brightness(1.1); }
+.bbs .item .save-btn { color: var(--on-ink); background: var(--ink); }
+.bbs .item .save-btn:hover { border-color: var(--accent); background: var(--accent); }
+.bbs .item .cancel-btn { color: var(--ink); background: transparent; }
+.bbs .item .cancel-btn:hover { background: var(--surface); }

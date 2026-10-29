@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import indicesHandler from './api/indices.js';
 import comicsHandler, { COMIC_BATCH_TIME } from './api/comics.js';
@@ -17,7 +17,11 @@ const devApi = {
   },
 };
 
-export default defineConfig({
-  plugins: [react(), devApi],
-  server: { port: 5173 },
+export default defineConfig(({ mode }) => {
+  // 서버 쪽 코드(배치)도 .env 의 SUPABASE_SERVICE_ROLE_KEY 등을 쓸 수 있게 process.env 에 넣기
+  process.env = { ...loadEnv(mode, process.cwd(), ''), ...process.env };
+  return {
+    plugins: [react(), devApi],
+    server: { port: 5173 },
+  };
 });

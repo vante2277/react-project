@@ -46,3 +46,41 @@ alter table public.todos enable row level security;
 drop policy if exists "todos_own" on public.todos;
 create policy "todos_own" on public.todos for all to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- ───────────── 피식 (배치가 모으는 만화) ─────────────
+-- 쓰기는 서버의 배치만 service_role 키로 합니다. (service_role 은 RLS 를 거치지 않으므로 쓰기 정책을 만들지 않음)
+create table if not exists public.comics (
+  id text primary key,
+  date date not null unique,            -- 하루 1건 (배치 멱등성의 마지막 안전장치)
+  num int not null,
+  title text not null,
+  alt text not null default '',
+  img text not null,
+  link text not null,
+  published date,
+  is_latest boolean not null default false,
+  source text not null default 'xkcd',
+  collected_at timestamptz not null default now()
+);
+
+alter table public.comics enable row level security;
+
+drop policy if exists "comics_select" on public.comics;
+create policy "comics_select" on public.comics for select using (true);
+
+create table if not exists public.comic_batch_runs (
+  id text primary key,
+  trigger text not null,
+  started_at timestamptz not null,
+  status text not null check (status in ('success', 'skipped', 'failed')),
+  message text not null default '',
+  post_id text,
+  duration_ms int
+);
+
+create index if not exists comic_batch_runs_started_at_idx on public.comic_batch_runs (started_at desc);
+
+alter table public.comic_batch_runs enable row level security;
+
+drop policy if exists "comic_batch_runs_select" on public.comic_batch_runs;
+create policy "comic_batch_runs_select" on public.comic_batch_runs for select using (true);

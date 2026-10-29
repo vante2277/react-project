@@ -72,11 +72,12 @@ export default function Pisik() {
   const load = useCallback(async () => {
     try {
       const res = await fetch('/api/comics');
-      if (!res.ok) throw new Error();
-      setData(await res.json());
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error);
+      setData(body);
       setError('');
-    } catch {
-      setError('포스트를 불러오지 못했습니다. 로컬 서버(npm run dev 또는 npm start)에서 실행 중인지 확인하세요.');
+    } catch (err) {
+      setError(`포스트를 불러오지 못했습니다. ${err.message || '서버에 연결할 수 없습니다.'}`);
     }
   }, []);
 

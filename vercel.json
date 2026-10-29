@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/cron/comic", "schedule": "0 0 * * *" }
+  ]
+}

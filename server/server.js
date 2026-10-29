@@ -1,4 +1,4 @@
-// 의존성 없는 서버: 빌드 결과(dist) + /api/indices 제공 (게시판·To do 데이터는 Supabase 에 저장)
+// 의존성 없는 서버: 빌드 결과(dist) + /api/indices, /api/comics 제공 (게시판·To do·피식 데이터는 Supabase 에 저장)
 // 개발: npm run dev (5173)
 // 배포: npm start → http://localhost:3001
 import http from 'node:http';

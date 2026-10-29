@@ -1,6 +1,4 @@
 node_modules
 dist
-# '피식' 배치가 만드는 데이터
-server/data/comics.json
-server/data/batch-runs.json
-server/data/*.tmp
+# 비밀 키(service_role 등)는 여기에 — 커밋되지 않음
+.env.local

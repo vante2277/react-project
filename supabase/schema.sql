@@ -84,3 +84,7 @@ alter table public.comic_batch_runs enable row level security;
 
 drop policy if exists "comic_batch_runs_select" on public.comic_batch_runs;
 create policy "comic_batch_runs_select" on public.comic_batch_runs for select using (true);
+
+-- 피식 한국어 번역 (제목·작가의 한마디). null 이면 다음 배치 실행이 보충합니다.
+alter table public.comics add column if not exists title_ko text;
+alter table public.comics add column if not exists alt_ko text;

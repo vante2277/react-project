@@ -50,6 +50,26 @@
   color: var(--ink-3);
 }
 
+/* 한국어 번역 */
+.pisik .ko {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+}
+.pisik .ko > span {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.pisik .ko dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+.pisik .ko dt { font-size: 0.78rem; font-weight: 600; color: var(--ink-3); white-space: nowrap; }
+.pisik .ko dd { margin: 0; font-size: 0.95rem; line-height: 1.65; }
+.pisik .ko-note { margin-top: 10px; font-size: 0.72rem; color: var(--ink-3); }
+
 .pisik .post-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
 .pisik .tags { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); }
 .pisik .post-foot a { font-size: 0.8rem; font-weight: 600; color: var(--accent); text-decoration: none; }

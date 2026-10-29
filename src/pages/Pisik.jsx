@@ -27,6 +27,20 @@ function Post({ post }) {
         <span>작가의 한마디</span>
         {post.alt}
       </blockquote>
+      {post.titleKo && (
+        <section className="ko">
+          <span>한국어 번역 · 기계 번역</span>
+          <dl>
+            <dt>제목</dt>
+            <dd>{post.titleKo}</dd>
+            {post.altKo && <>
+              <dt>작가의 한마디</dt>
+              <dd>{post.altKo}</dd>
+            </>}
+          </dl>
+          <p className="ko-note">만화 속 대사는 번역되지 않아요. 원문 이미지를 함께 봐 주세요.</p>
+        </section>
+      )}
       <footer className="post-foot">
         <span className="tags">#xkcd #{post.num} {post.isLatest && '#최신화'}</span>
         <a href={post.link} target="_blank" rel="noreferrer">원문 보기 ↗</a>

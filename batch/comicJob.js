@@ -62,6 +62,49 @@ async function pickComic(seen) {
   throw new Error('실을 만화를 고르지 못했습니다');
 }
 
+// 무료 번역 API(MyMemory: 키 불필요, 하루 5,000자, 한 번에 500바이트까지)로 영어 → 한국어
+const ENTITIES = { '&#39;': "'", '&quot;': '"', '&amp;': '&', '&lt;': '<', '&gt;': '>' };
+
+async function translate(text) {
+  // 긴 문장은 문장 단위로 나눠 한도(500바이트) 안에서 번역한 뒤 이어 붙입니다.
+  const chunks = text.match(/[^.!?]+[.!?]*\s*/g)?.reduce((acc, s) => {
+    if (acc.length && (acc.at(-1) + s).length < 400) acc[acc.length - 1] += s; else acc.push(s);
+    return acc;
+  }, []) ?? [];
+  const out = [];
+  for (const chunk of chunks) {
+    const data = await fetchJson(`https://api.mymemory.translated.net/get?langpair=en|ko&q=${encodeURIComponent(chunk.trim())}`);
+    if (Number(data.responseStatus) !== 200 || data.quotaFinished) {
+      throw new Error(`번역 실패: ${data.responseDetails || data.responseStatus}`);
+    }
+    out.push(data.responseData.translatedText.replace(/&#39;|&quot;|&amp;|&lt;|&gt;/g, e => ENTITIES[e]));
+  }
+  return out.join(' ');
+}
+
+// 번역은 부가 기능이라 실패해도 포스트는 저장하고(null), 다음 실행에서 보충합니다.
+async function translatePost({ title, alt }) {
+  try {
+    return { title_ko: await translate(title), alt_ko: alt ? await translate(alt) : '' };
+  } catch (err) {
+    console.error('[피식 배치]', err.message);
+    return { title_ko: null, alt_ko: null };
+  }
+}
+
+// 번역이 빠진 포스트를 최대 3건 채웁니다. (번역 API 장애·한도 초과로 놓친 것 보충)
+async function backfillTranslations() {
+  const missing = check(await db().from('comics').select('id, title, alt').is('title_ko', null).limit(3));
+  let done = 0;
+  for (const post of missing) {
+    const ko = await translatePost(post);
+    if (ko.title_ko === null) break;
+    check(await db().from('comics').update(ko).eq('id', post.id));
+    done++;
+  }
+  return done;
+}
+
 // DB 컬럼은 snake_case, 화면(API 응답)은 camelCase
 const toRow = (comic, date, isLatest) => ({
   id: `${date}-${comic.num}`,
@@ -76,7 +119,9 @@ const toRow = (comic, date, isLatest) => ({
   source: 'xkcd',
 });
 
-const toPost = ({ is_latest, collected_at, ...rest }) => ({ ...rest, isLatest: is_latest, collectedAt: collected_at });
+const toPost = ({ is_latest, collected_at, title_ko, alt_ko, ...rest }) => ({
+  ...rest, isLatest: is_latest, collectedAt: collected_at, titleKo: title_ko, altKo: alt_ko,
+});
 const toRun = ({ started_at, post_id, duration_ms, ...rest }) => ({
   ...rest, startedAt: started_at, postId: post_id, durationMs: duration_ms,
 });
@@ -112,15 +157,19 @@ async function execute(trigger, force) {
     } else {
       const { comic, isLatest } = await pickComic(new Set(posts.map(p => p.num)));
       const row = toRow(comic, date, isLatest);
+      Object.assign(row, await translatePost(row));
       try {
         check(await comics().insert(row));
-        Object.assign(run, { status: 'success', message: `#${row.num} "${row.title}" 수집`, postId: row.id });
+        const note = row.title_ko === null ? ' (번역은 다음 실행에서 보충)' : '';
+        Object.assign(run, { status: 'success', message: `#${row.num} "${row.title}" 수집${note}`, postId: row.id });
       } catch (err) {
         // 다른 서버(로컬과 Vercel 등)가 같은 순간에 먼저 저장한 경우: date unique 제약이 막아 줍니다.
         if (err.code !== '23505') throw err;
         Object.assign(run, { status: 'skipped', message: `${date} 포스트를 다른 실행이 먼저 저장함` });
       }
     }
+    const filled = await backfillTranslations();
+    if (filled) run.message += ` · 번역 보충 ${filled}건`;
   } catch (err) {
     Object.assign(run, { status: 'failed', message: err.message });
   }

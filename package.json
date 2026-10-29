@@ -7,7 +7,8 @@
     "dev": "vite",
     "server": "node server/server.js",
     "build": "vite build",
-    "start": "vite build && node server/server.js"
+    "start": "vite build && node server/server.js",
+    "batch:comic": "node batch/run-comic.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

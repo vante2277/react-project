@@ -1,2 +1,6 @@
 node_modules
 dist
+# '피식' 배치가 만드는 데이터
+server/data/comics.json
+server/data/batch-runs.json
+server/data/*.tmp

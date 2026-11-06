@@ -26,8 +26,8 @@
 .bbs .item .content { margin-top: 8px; font-size: 0.92rem; line-height: 1.65; color: var(--ink-2); white-space: pre-wrap; word-break: break-all; }
 
 .bbs .item .actions { margin-top: 10px; display: flex; gap: 14px; }
-.bbs .item .edit-btn,
-.bbs .item .del {
+.bbs .edit-btn,
+.bbs .del {
   border: none;
   background: none;
   font-family: var(--mono);
@@ -35,8 +35,8 @@
   color: var(--ink-3);
   cursor: pointer;
 }
-.bbs .item .edit-btn:hover { color: var(--ink); text-decoration: underline; }
-.bbs .item .del:hover { color: var(--danger); text-decoration: underline; }
+.bbs .edit-btn:hover { color: var(--ink); text-decoration: underline; }
+.bbs .del:hover { color: var(--danger); text-decoration: underline; }
 
 .bbs .item.editing { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
 .bbs .item .edit-title,
@@ -63,3 +63,75 @@
 .bbs .item .save-btn:hover { border-color: var(--accent); background: var(--accent); }
 .bbs .item .cancel-btn { color: var(--ink); background: transparent; }
 .bbs .item .cancel-btn:hover { background: var(--surface); }
+
+/* ───────── 목록: 검색 · 개수 · 페이지 ───────── */
+.bbs .board-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.bbs .board-head h2 { margin-bottom: 0; }
+.bbs .total { margin-left: 4px; color: var(--ink-3); letter-spacing: 0.04em; }
+.bbs .board-head .search { width: 180px; padding: 8px 12px; font-size: 0.85rem; }
+
+.bbs .list.posts { max-height: none; overflow: visible; }
+.bbs .post-link { display: block; color: inherit; text-decoration: none; }
+.bbs .post-link:hover .title { color: var(--accent); }
+.bbs .comment-count { margin-left: 6px; font-family: var(--mono); font-size: 0.8rem; font-weight: 500; color: var(--accent); }
+.bbs .like-count { color: var(--accent); }
+
+.bbs .pagination { display: flex; justify-content: center; gap: 4px; margin-top: 18px; font-family: var(--mono); font-size: 0.8rem; }
+.bbs .pagination a,
+.bbs .pagination span { min-width: 32px; padding: 6px 9px; border-radius: 8px; text-align: center; }
+.bbs .pagination a { color: var(--ink-2); text-decoration: none; }
+.bbs .pagination a:hover { background: var(--surface-2); color: var(--ink); }
+.bbs .pagination a.current { background: var(--ink); color: var(--on-ink); font-weight: 600; }
+.bbs .pagination .disabled { color: var(--ink-3); opacity: 0.5; }
+
+/* ───────── 상세 ───────── */
+.bbs .post { padding-bottom: 20px; border-bottom: 2px solid var(--ink); }
+.bbs .post-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; line-height: 1.35; word-break: break-all; }
+.bbs .post-meta { margin-top: 6px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); }
+.bbs .post-content { margin-top: 20px; font-size: 0.98rem; line-height: 1.8; color: var(--ink-2); white-space: pre-wrap; word-break: break-all; }
+.bbs .post-actions { margin-top: 24px; display: flex; align-items: center; justify-content: space-between; }
+.bbs .owner-actions { display: flex; gap: 14px; }
+
+.bbs .like {
+  padding: 7px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.bbs .like:hover { border-color: var(--accent); color: var(--accent); }
+.bbs .like.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+
+.bbs .not-found { text-align: center; }
+.bbs .not-found a { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+/* ───────── 댓글 ───────── */
+.bbs .comments { margin-top: 22px; }
+.bbs .comments h2 {
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+.bbs .comment-list { list-style: none; margin-bottom: 14px; }
+.bbs .comment { padding: 12px 2px; border-bottom: 1px solid var(--line); }
+.bbs .comment .meta { display: flex; align-items: baseline; gap: 10px; font-size: 0.75rem; }
+.bbs .comment .author { font-weight: 600; color: var(--ink); }
+.bbs .comment .date { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); }
+.bbs .comment .del { margin-left: auto; }
+.bbs .comment .content { margin-top: 4px; font-size: 0.9rem; line-height: 1.6; color: var(--ink-2); white-space: pre-wrap; word-break: break-all; }
+
+.bbs .comment-form { display: flex; gap: 8px; align-items: stretch; }
+.bbs .comment-form textarea { flex: 1; min-height: 52px; padding: 10px 12px; font-size: 0.9rem; line-height: 1.5; resize: vertical; }
+.bbs .comment-form button { padding: 0 18px; font-size: 0.88rem; }
+
+@media (max-width: 600px) {
+  .bbs .board-head { flex-direction: column; align-items: stretch; }
+  .bbs .board-head .search { width: 100%; }
+}

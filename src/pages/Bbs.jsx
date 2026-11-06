@@ -1,59 +1,96 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase, supabaseReady, dbErrorText } from '../supabase.js';
 import { useAuth, displayName } from '../auth/AuthContext.jsx';
 import '../styles/bbs.css';
 
-function PostEditor({ post, onSave, onCancel }) {
-  const [title, setTitle] = useState(post.title);
-  const [content, setContent] = useState(post.content);
-  const [busy, setBusy] = useState(false);
+const PAGE_SIZE = 10;
 
-  const save = async () => {
-    const t = title.trim();
-    const c = content.trim();
-    if (!t || !c) return;
-    setBusy(true);
-    await onSave(t, c);
-    setBusy(false);
-  };
+// 검색어에서 PostgREST 필터 문법(쉼표·괄호·따옴표)과 LIKE 와일드카드로 쓰이는 문자를 뺍니다.
+const cleanQuery = q => q.replace(/[%_*,()"\\]/g, ' ').trim();
+
+function Pagination({ page, totalPages, hrefOf }) {
+  if (totalPages <= 1) return null;
+  // 현재 페이지를 가운데에 두고 최대 5개 번호를 보여줍니다.
+  const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+  const pages = Array.from({ length: Math.min(5, totalPages) }, (_, i) => start + i);
 
   return (
-    <li className="item editing">
-      <input className="edit-title" value={title} maxLength={100} autoFocus
-        onChange={e => setTitle(e.target.value)} />
-      <textarea className="edit-content" value={content} maxLength={2000}
-        onChange={e => setContent(e.target.value)} />
-      <div className="actions">
-        <button className="save-btn" onClick={save} disabled={busy}>{busy ? '저장 중…' : '저장'}</button>
-        <button className="cancel-btn" onClick={onCancel}>취소</button>
-      </div>
-    </li>
+    <nav className="pagination" aria-label="페이지">
+      {page > 1 ? <Link to={hrefOf(page - 1)}>‹ 이전</Link> : <span className="disabled">‹ 이전</span>}
+      {pages.map(n => (
+        <Link key={n} to={hrefOf(n)} className={n === page ? 'current' : ''}
+          aria-current={n === page ? 'page' : undefined}>{n}</Link>
+      ))}
+      {page < totalPages ? <Link to={hrefOf(page + 1)}>다음 ›</Link> : <span className="disabled">다음 ›</span>}
+    </nav>
   );
 }
 
 export default function Bbs() {
   const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  // 검색어와 페이지는 URL(?q=&page=)에 둡니다. 새로고침·뒤로가기·링크 공유를 해도 같은 화면이 나옵니다.
+  const [params, setParams] = useSearchParams();
+  const q = params.get('q') ?? '';
+  const page = Math.max(1, Math.floor(Number(params.get('page'))) || 1);
+
+  const [keyword, setKeyword] = useState(q);
   const [posts, setPosts] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(supabaseReady);
   const [error, setError] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [busy, setBusy] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const hrefOf = n => {
+    const next = new URLSearchParams();
+    if (q) next.set('q', q);
+    if (n > 1) next.set('page', n);
+    const s = next.toString();
+    return s ? `/bbs?${s}` : '/bbs';
+  };
+
+  // 뒤로가기 등으로 URL 의 검색어가 바뀌면 입력창도 맞춥니다.
+  useEffect(() => setKeyword(q), [q]);
+
+  // 입력을 멈추고 300ms 가 지나면 URL 에 반영합니다. (한 글자마다 요청하지 않도록 디바운스)
+  useEffect(() => {
+    const v = keyword.trim();
+    if (v === q) return;
+    const timer = setTimeout(() => setParams(v ? { q: v } : {}, { replace: true }), 300);
+    return () => clearTimeout(timer);
+  }, [keyword, q, setParams]);
 
   useEffect(() => {
     if (!supabase) return;
     let cancelled = false;
-    supabase.from('posts').select('*').order('created_at', { ascending: false })
-      .then(({ data, error: err }) => {
-        if (cancelled) return;
-        if (err) setError(dbErrorText(err));
-        else setPosts(data);
-        setLoading(false);
-      });
+    setLoading(true);
+    const from = (page - 1) * PAGE_SIZE;
+    // comments(count), post_likes(count): 연결된 테이블의 개수를 글과 함께 한 번에 가져옵니다.
+    let query = supabase.from('posts')
+      .select('id, title, author, created_at, updated_at, comments(count), post_likes(count)', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    const term = cleanQuery(q);
+    if (term) query = query.or(`title.ilike.%${term}%,content.ilike.%${term}%`);
+
+    query.then(({ data, count, error: err }) => {
+      if (cancelled) return;
+      // PGRST103: 글 수보다 뒤쪽 페이지를 요청함 → 1페이지로 보냅니다.
+      if (err?.code === 'PGRST103') return setParams(q ? { q } : {}, { replace: true });
+      if (err) setError(dbErrorText(err));
+      else {
+        setPosts(data);
+        setTotal(count ?? 0);
+        setError('');
+      }
+      setLoading(false);
+    });
     return () => { cancelled = true; };
-  }, []);
+  }, [q, page, setParams]);
 
   const submit = async e => {
     e.preventDefault();
@@ -64,30 +101,10 @@ export default function Bbs() {
     setError('');
     const { data, error: err } = await supabase.from('posts')
       .insert({ title: t, content: c, author: displayName(user) })
-      .select().single();
+      .select('id').single();
     setBusy(false);
     if (err) return setError(dbErrorText(err));
-    setPosts(prev => [data, ...prev]);
-    setTitle('');
-    setContent('');
-  };
-
-  const update = async (id, t, c) => {
-    setError('');
-    const { data, error: err } = await supabase.from('posts')
-      .update({ title: t, content: c, updated_at: new Date().toISOString() })
-      .eq('id', id).select().single();
-    if (err) return setError(dbErrorText(err));
-    setPosts(prev => prev.map(p => (p.id === id ? data : p)));
-    setEditingId(null);
-  };
-
-  const remove = async id => {
-    if (!confirm('이 글을 삭제할까요?')) return;
-    setError('');
-    const { error: err } = await supabase.from('posts').delete().eq('id', id);
-    if (err) return setError(dbErrorText(err));
-    setPosts(prev => prev.filter(p => p.id !== id));
+    navigate(`/bbs/${data.id}`);
   };
 
   return (
@@ -117,31 +134,38 @@ export default function Bbs() {
           {error && <p className="notice error" role="alert">{error}</p>}
 
           <section className="board">
-            <h2>글 목록</h2>
-            <ul className="list">
+            <div className="board-head">
+              <h2>{q ? `"${q}" 검색 결과` : '글 목록'} <span className="total">{total}건</span></h2>
+              <input className="search" type="search" placeholder="제목·내용 검색" aria-label="게시글 검색"
+                value={keyword} onChange={e => setKeyword(e.target.value)} />
+            </div>
+            <ul className="list posts">
               {loading && <li className="empty">불러오는 중…</li>}
-              {!loading && !posts.length && <li className="empty">작성된 글이 없습니다</li>}
-              {posts.map(p => (p.id === editingId ? (
-                <PostEditor key={p.id} post={p}
-                  onSave={(t, c) => update(p.id, t, c)}
-                  onCancel={() => setEditingId(null)} />
-              ) : (
-                <li key={p.id} className="item">
-                  <div className="row">
-                    <span className="title">{p.title}</span>
-                    <span className="date">{new Date(p.created_at).toLocaleString('ko-KR')}</span>
-                  </div>
-                  <div className="author">{p.author || '익명'}{p.updated_at && ' · 수정됨'}</div>
-                  <div className="content">{p.content}</div>
-                  {user?.id === p.user_id && (
-                    <div className="actions">
-                      <button className="edit-btn" onClick={() => setEditingId(p.id)}>수정</button>
-                      <button className="del" onClick={() => remove(p.id)}>삭제</button>
-                    </div>
-                  )}
-                </li>
-              )))}
+              {!loading && !posts.length && <li className="empty">{q ? '검색 결과가 없습니다' : '작성된 글이 없습니다'}</li>}
+              {!loading && posts.map(p => {
+                const comments = p.comments[0]?.count ?? 0;
+                const likes = p.post_likes[0]?.count ?? 0;
+                return (
+                  <li key={p.id} className="item">
+                    {/* 상세에서 "목록"으로 돌아올 때 지금의 검색어·페이지를 유지하도록 state 로 넘깁니다. */}
+                    <Link className="post-link" to={`/bbs/${p.id}`} state={{ from: params.toString() }}>
+                      <div className="row">
+                        <span className="title">
+                          {p.title}
+                          {comments > 0 && <span className="comment-count">[{comments}]</span>}
+                        </span>
+                        <span className="date">{new Date(p.created_at).toLocaleDateString('ko-KR')}</span>
+                      </div>
+                      <div className="author">
+                        {p.author || '익명'}{p.updated_at && ' · 수정됨'}
+                        {likes > 0 && <span className="like-count"> · ♥ {likes}</span>}
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
+            <Pagination page={page} totalPages={totalPages} hrefOf={hrefOf} />
           </section>
         </>
       )}

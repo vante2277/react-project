@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import Signup from './pages/Signup.jsx';
 import Login from './pages/Login.jsx';
+import BbsPost from './pages/BbsPost.jsx';
 import { MENUS } from './menus.js';
 
 export default function App() {
@@ -10,6 +11,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/bbs/:id" element={<BbsPost />} />
       {MENUS.filter(m => m.Component).map(({ path, Component }) => (
         <Route key={path} path={path} element={<Component />} />
       ))}

@@ -88,3 +88,54 @@ create policy "comic_batch_runs_select" on public.comic_batch_runs for select us
 -- 피식 한국어 번역 (제목·작가의 한마디). null 이면 다음 배치 실행이 보충합니다.
 alter table public.comics add column if not exists title_ko text;
 alter table public.comics add column if not exists alt_ko text;
+
+-- ───────────── 게시판 댓글 ─────────────
+create table if not exists public.comments (
+  id bigint generated always as identity primary key,
+  post_id bigint not null references public.posts (id) on delete cascade, -- 글이 지워지면 댓글도 함께
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  author text not null default '',
+  content text not null check (char_length(content) between 1 and 500),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists comments_post_id_idx on public.comments (post_id);
+
+alter table public.comments enable row level security;
+
+-- 댓글 읽기는 누구나, 쓰기는 로그인한 사용자, 삭제는 작성자 본인만
+drop policy if exists "comments_select" on public.comments;
+create policy "comments_select" on public.comments for select using (true);
+
+drop policy if exists "comments_insert" on public.comments;
+create policy "comments_insert" on public.comments for insert to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists "comments_delete" on public.comments;
+create policy "comments_delete" on public.comments for delete to authenticated
+  using (auth.uid() = user_id);
+
+-- ───────────── 게시판 좋아요 ─────────────
+-- (post_id, user_id) 가 기본키라서 한 사람이 같은 글에 두 번 좋아요할 수 없습니다.
+create table if not exists public.post_likes (
+  post_id bigint not null references public.posts (id) on delete cascade,
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (post_id, user_id)
+);
+
+alter table public.post_likes enable row level security;
+
+drop policy if exists "post_likes_select" on public.post_likes;
+create policy "post_likes_select" on public.post_likes for select using (true);
+
+drop policy if exists "post_likes_insert" on public.post_likes;
+create policy "post_likes_insert" on public.post_likes for insert to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists "post_likes_delete" on public.post_likes;
+create policy "post_likes_delete" on public.post_likes for delete to authenticated
+  using (auth.uid() = user_id);
+
+-- 새 테이블을 API 가 바로 알아보도록 스키마 캐시를 새로고침합니다.
+notify pgrst, 'reload schema';

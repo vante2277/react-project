@@ -95,6 +95,7 @@ input, textarea, select {
 .btn-primary,
 .auth-form button,
 .bbs .write button,
+.bbs .comment-form button,
 .todo .add button,
 .stocks .refresh,
 .weather .refresh {
@@ -109,11 +110,13 @@ input, textarea, select {
 }
 .auth-form button:hover,
 .bbs .write button:hover,
+.bbs .comment-form button:hover,
 .todo .add button:hover,
 .stocks .refresh:hover,
 .weather .refresh:hover { background: var(--accent); }
 .auth-form button:active,
 .bbs .write button:active,
+.bbs .comment-form button:active,
 .todo .add button:active,
 .stocks .refresh:active,
 .weather .refresh:active { transform: translateY(1px); }

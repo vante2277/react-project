@@ -60,6 +60,16 @@
   letter-spacing: -0.035em;
   line-height: 1.05;
 }
+/* 타이틀 옆 'by React' 표기 */
+.home .hero h1 .by {
+  font-family: var(--mono);
+  font-size: 0.28em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  white-space: nowrap;
+  vertical-align: middle;
+}
 .home .tagline {
   margin-top: 14px;
   font-family: var(--serif);

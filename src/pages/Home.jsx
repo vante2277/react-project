@@ -42,7 +42,7 @@ export default function Home() {
 
       <header className="hero">
         <p className="kicker">Daily Tools · Est. 2026</p>
-        <h1>현성's Daily Hub</h1>
+        <h1>현성's Daily Hub <span className="by">by React</span></h1>
         <p className="tagline">매일 쓰는 작은 도구들을 한 곳에서</p>
       </header>
 

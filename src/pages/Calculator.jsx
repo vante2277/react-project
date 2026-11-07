@@ -142,7 +142,7 @@ export default function Calculator() {
       </div>
       <div className="links">
         <Link className="todo-link" to="/todo">📝 To do list</Link>
-        <Link className="board-link" to="/bbs">📋 게시판</Link>
+        <Link className="board-link" to="/bbs">📋 자유게시판</Link>
       </div>
     </main>
   );

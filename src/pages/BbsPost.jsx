@@ -206,7 +206,7 @@ export default function BbsPost() {
     <main className="app bbs">
       <header>
         <Link className="back" to={listHref}>← 목록</Link>
-        <h1>게시판</h1>
+        <h1>자유게시판</h1>
       </header>
 
       {!supabaseReady ? (
@@ -216,7 +216,7 @@ export default function BbsPost() {
       ) : notFound ? (
         <div className="not-found">
           <p className="empty">글을 찾을 수 없습니다. 삭제되었거나 잘못된 주소예요.</p>
-          <Link to="/bbs">게시판 목록으로</Link>
+          <Link to="/bbs">자유게시판 목록으로</Link>
         </div>
       ) : (
         <>

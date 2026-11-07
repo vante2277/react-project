@@ -111,7 +111,7 @@ export default function Bbs() {
     <main className="app bbs">
       <header>
         <Link className="back" to="/">← 홈</Link>
-        <h1>게시판</h1>
+        <h1>자유게시판</h1>
         <p className="storage">저장 위치: Supabase</p>
       </header>
 

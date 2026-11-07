@@ -12,7 +12,7 @@ import Pisik from './pages/Pisik.jsx';
 export const MENUS = [
   {
     path: '/bbs',
-    title: '게시판',
+    title: '자유게시판',
     desc: '글을 작성하고 수정·삭제할 수 있어요.',
     icon: '📋',
     Component: Bbs,

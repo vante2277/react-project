@@ -16,7 +16,7 @@ function Post({ post }) {
   return (
     <article className="post">
       <p className="post-meta">
-        <span className="badge">오늘의 피식</span>
+        <span className="badge">이번 주 피식</span>
         <time dateTime={post.date}>{longDate(post.date)}</time>
       </p>
       <h2>{post.title}</h2>
@@ -56,10 +56,10 @@ function BatchPanel({ runs, schedule, onRun, busy }) {
   return (
     <details className="batch">
       <summary>
-        배치 실행 기록 <span>매일 {schedule} (한국 시간) 자동 수집</span>
+        배치 실행 기록 <span>매주 {schedule} (한국 시간) 자동 수집</span>
       </summary>
       <div className="batch-head">
-        <p>오늘 포스트가 이미 있으면 다시 실행해도 건너뜁니다.</p>
+        <p>이번 주 포스트가 이미 있으면 다시 실행해도 건너뜁니다.</p>
         <button className="btn-primary" onClick={onRun} disabled={busy}>{busy ? '수집 중…' : '지금 실행'}</button>
       </div>
       {!runs.length ? <p className="empty">아직 실행 기록이 없습니다</p> : (
@@ -117,7 +117,7 @@ export default function Pisik() {
       <header>
         <Link className="back" to="/">← 홈</Link>
         <h1>피식</h1>
-        <p className="storage">하루 한 편, 짧고 웃긴 만화 · 지금까지 {posts.length}편</p>
+        <p className="storage">일주일에 한 편, 짧고 웃긴 만화 · 지금까지 {posts.length}편</p>
       </header>
 
       {error && <p className="notice error" role="alert">{error}</p>}

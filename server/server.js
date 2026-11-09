@@ -6,9 +6,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import indicesHandler from '../api/indices.js';
-import comicsHandler, { COMIC_BATCH_TIME } from '../api/comics.js';
-import { runComicJob } from '../batch/comicJob.js';
-import { startDailySchedule } from '../batch/scheduler.js';
+import comicsHandler from '../api/comics.js';
+import { runComicJob, COMIC_SCHEDULE } from '../batch/comicJob.js';
+import { startSchedule } from '../batch/scheduler.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(__dirname, '..', 'dist');
@@ -49,5 +49,5 @@ http.createServer((req, res) => {
   });
 }).listen(PORT, () => console.log(`http://localhost:${PORT}`));
 
-// '피식' 배치: 매일 COMIC_BATCH_TIME(기본 09:00, 한국 시간)에 만화 수집
-startDailySchedule('피식 배치', COMIC_BATCH_TIME, trigger => runComicJob({ trigger }));
+// '피식' 배치: 매주 COMIC_SCHEDULE(기본 월요일 09:00, 한국 시간)에 만화 수집
+startSchedule('피식 배치', COMIC_SCHEDULE, trigger => runComicJob({ trigger }));

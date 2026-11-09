@@ -61,7 +61,7 @@ export const MENUS = [
   {
     path: '/pisik',
     title: '피식',
-    desc: '매일 아침 배치가 모아 오는 짧고 웃긴 만화 한 편.',
+    desc: '매주 월요일 배치가 모아 오는 짧고 웃긴 만화 한 편.',
     icon: '😏',
     Component: Pisik,
   },

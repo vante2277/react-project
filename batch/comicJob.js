@@ -1,6 +1,6 @@
 // '피식' 배치 작업: 외부 Open API(xkcd)에서 만화 1편을 수집해 블로그 포스트로 저장합니다.
-// 하루에 1건만 만들어지도록(멱등성) 오늘 날짜 포스트가 있으면 건너뜁니다.
-//   - 포스트:    Supabase comics 테이블 (date 가 unique 라 DB 에서도 하루 1건이 보장됨)
+// 일주일에 1건만 만들어지도록(멱등성) 이번 회차(지난 배치 요일 이후)에 포스트가 있으면 건너뜁니다.
+//   - 포스트:    Supabase comics 테이블 (date 가 unique 라 DB 에서도 같은 날 중복 저장은 막힘)
 //   - 실행 기록: Supabase comic_batch_runs 테이블
 // 서버에서만 쓰는 service_role 키로 저장합니다. (테이블은 supabase/schema.sql 참고)
 import { createClient } from '@supabase/supabase-js';
@@ -10,8 +10,19 @@ const MAX_RUNS = 30;
 const API = num => `https://xkcd.com/${num ? num + '/' : ''}info.0.json`;
 const IMAGE = /\.(png|jpe?g|gif)$/i; // 인터랙티브 만화처럼 이미지가 없는 회차는 제외
 
+// 배치 일정: 매주 월요일(weekday 1) 09:00, 한국 시간.
+// 바꾸면 vercel.json 의 crons.schedule 도 같이 맞춰 주세요. ('0 0 * * 1' = 월요일 00:00 UTC = 09:00 KST)
+export const COMIC_SCHEDULE = { weekday: 1, time: process.env.COMIC_BATCH_TIME || '09:00' };
+
 // 한국 시간 기준 'YYYY-MM-DD'
 export const todayKST = () => new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+
+// 이번 회차의 시작일: 오늘을 포함해 가장 최근의 배치 요일 (KST 'YYYY-MM-DD')
+export function periodStartKST(weekday = COMIC_SCHEDULE.weekday) {
+  const kst = new Date(Date.now() + 9 * 3600e3);
+  const back = (kst.getUTCDay() - weekday + 7) % 7;
+  return new Date(kst.getTime() - back * 24 * 3600e3).toISOString().slice(0, 10);
+}
 
 // 환경변수는 처음 쓸 때 읽습니다. (vite.config.js 가 .env 를 늦게 불러오기 때문)
 let client;
@@ -150,10 +161,12 @@ async function execute(trigger, force) {
 
   try {
     const comics = () => db().from('comics'); // 쿼리마다 새 builder
-    if (force) check(await comics().delete().eq('date', date));
+    const since = periodStartKST();
+    if (force) check(await comics().delete().gte('date', since));
     const posts = check(await comics().select('date, num'));
-    if (posts.some(p => p.date === date)) {
-      Object.assign(run, { status: 'skipped', message: `${date} 포스트가 이미 있어 건너뜀` });
+    const existing = posts.find(p => p.date >= since);
+    if (existing) {
+      Object.assign(run, { status: 'skipped', message: `이번 주 포스트(${existing.date})가 이미 있어 건너뜀` });
     } else {
       const { comic, isLatest } = await pickComic(new Set(posts.map(p => p.num)));
       const row = toRow(comic, date, isLatest);
